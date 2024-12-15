@@ -1,0 +1,33 @@
+@baseUrl=http://localhost:3000
+
+### get all peserta
+GET {{baseUrl}}/api/peserta
+
+### search peserta
+GET {{baseUrl}}/api/peserta?idMhs=3mpNoYJSZj7RwQeMYLYR
+
+### search id event
+GET {{baseUrl}}/api/peserta?idEvent=7SrW4IxXmOPGx3UOIVFK
+
+### get one peserta
+GET {{baseUrl}}/api/peserta/DHbgWORKYf8mAhbul7KW
+
+### add data peserta
+POST {{baseUrl}}/api/peserta
+Content-Type: application/json
+
+{
+    "idEvent": "Zx7J8JUOXWVRpfC2j5MZ",
+    "idMhs": "FLbhWYqslMQ3s7FdGAtY"
+}
+
+### edit data peserta
+PUT {{baseUrl}}/api/peserta/DHbgWORKYf8mAhbul7KW
+Content-Type: application/json
+
+{
+    "judul": "webinar bla bla bla",
+}
+
+### delete data peserta
+DELETE  {{baseUrl}}/api/peserta/znuZQLzxkNsnF5Ho3NzS

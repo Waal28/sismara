@@ -1,0 +1,45 @@
+@baseUrl=http://localhost:3000
+### get all admin
+GET {{baseUrl}}/api/admin
+
+### get one admin
+GET {{baseUrl}}/api/admin/51LkAbhTX4rrRLnV1DEv
+
+### LOGIN data admin
+POST {{baseUrl}}/api/admin/login
+Content-Type: application/json
+
+{
+    "username": "iwal",
+    "password": "12345"
+}
+### REGISTER data admin
+POST {{baseUrl}}/api/admin/register
+Content-Type: application/json
+
+{
+    "username": "iwal",
+    "password": "12345"
+}
+### edit data admin
+PUT {{baseUrl}}/api/admin/Ghg2qXlMaXNqkhBbYPmM
+Content-Type: application/json
+
+{
+    "nama": "iwal gege",
+    "npm": "203510358",
+    "email": "iwal@gmail.com",
+    "prodi": "Teknik Mesin"
+}
+
+### delete data admin
+DELETE  {{baseUrl}}/api/admin/t7H3uo3d0pNI2P7iIpBq
+
+### ubah password admin
+POST {{baseUrl}}/api/admin/Ghg2qXlMaXNqkhBbYPmM/change-password
+Content-Type: application/json
+
+{
+    "oldPassword": "12345",
+    "newPassword": "12345"
+}

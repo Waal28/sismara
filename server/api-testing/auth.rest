@@ -1,0 +1,26 @@
+@baseUrl=http://localhost:3000
+
+###
+GET https://dummyjson.com/products
+### register portal
+POST {{baseUrl}}/api/auth/portal-register
+Content-Type: application/json
+
+{
+    "npm": "203510358",
+    "email": "iwal@gmail.com",
+    "password": "12345",
+    "confirmPassword": "12345",
+    "nama": "iwal",
+    "prodi":"Teknik Mesin"
+}
+
+### login portal
+POST {{baseUrl}}/api/auth/portal-login
+Content-Type: application/json
+
+{
+    "email": "jerrrrrr@student.uir.ac.id",
+    "name": "WAL HUSNA FAIZUL",
+    "image": "https://lh3.googleusercontent.com/a/ACg8ocJHCBr9egFjIqGMxnQV-65racM1PSMsbbCPwpe7QXFuDuCmmw=s96-c"
+}

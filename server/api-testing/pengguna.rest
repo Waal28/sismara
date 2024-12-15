@@ -1,0 +1,42 @@
+@baseUrl=http://localhost:3000
+
+### get all pengguna
+GET {{baseUrl}}/api/pengguna
+
+### search pengguna
+GET {{baseUrl}}/api/pengguna?search=iwal
+
+### get one pengguna
+GET {{baseUrl}}/api/pengguna/T55LJc6s6uaclcWHD8Mw
+
+### add data pengguna
+POST {{baseUrl}}/api/pengguna
+Content-Type: application/json
+
+{
+    "username": "husna28",
+    "email": "husna@gmail.com",
+    "isAdmin": false,
+    "name": "husna",
+    "npm": "203510358",
+    "prodi": "Teknik Informatika"
+
+}
+
+### edit data pengguna
+PUT {{baseUrl}}/api/pengguna/T55LJc6s6uaclcWHD8Mw
+Content-Type: application/json
+
+{
+    "judul": "webinar bla bla bla",
+    "deskripsi": "ini deskripsi",
+    "kategori": "ini kategori",
+    "prodi": "ini prodi",
+    "waktu_mulai": "ini waktu_mulai",
+    "waktu_selesai": "ini waktu_selesai",
+    "tempat": "ini tempat",
+    "gambar": "ini gambar"
+}
+
+### delete data pengguna
+DELETE  {{baseUrl}}/api/pengguna/9PqdILfuSojaAqb8ibN2

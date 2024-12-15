@@ -1,0 +1,37 @@
+@baseUrl=http://localhost:3000
+### get all mahasiswa
+GET {{baseUrl}}/api/mahasiswa
+
+### get one mahasiswa
+GET {{baseUrl}}/api/mahasiswa/51LkAbhTX4rrRLnV1DEv
+
+### add data mahasiswa
+POST {{baseUrl}}/api/mahasiswa
+Content-Type: application/json
+
+{
+    "nama": "Hendra Wijaya",
+    "npm": "2033237788",
+    "email": "hendra@student.uir.ac.id",
+    "prodi": "Teknik Informatika",
+}
+
+### edit data mahasiswa
+PUT {{baseUrl}}/api/mahasiswa/zGbJVEuDmy2pXVNdQKFi
+Content-Type: application/json
+
+{
+    "npm": "203510358000000000"
+}
+
+### delete data mahasiswa
+DELETE  {{baseUrl}}/api/mahasiswa/cCoIKlLD9AUweZbhrxrH
+
+### ubah password mahasiswa
+POST {{baseUrl}}/api/mahasiswa/Ghg2qXlMaXNqkhBbYPmM/change-password
+Content-Type: application/json
+
+{
+    "oldPassword": "12345",
+    "newPassword": "12345"
+}

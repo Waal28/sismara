@@ -1,0 +1,33 @@
+@baseUrl=http://localhost:3000
+
+### get all ulasan
+GET {{baseUrl}}/api/ulasan
+
+### search ulasan
+GET {{baseUrl}}/api/ulasan?idEvent=8L1oYLACWzDMYHB9Rn3n
+
+### get one ulasan
+GET {{baseUrl}}/api/ulasan/DHbgWORKYf8mAhbul7KW
+
+### add data ulasan
+POST {{baseUrl}}/api/ulasan
+Content-Type: application/json
+
+{
+    "idEvent": "8L1oYLACWzDMYHB9Rn3n",
+    "idMhs": "3mpNoYJSZj7RwQeMYLYR",
+    "content": "ini komentar pertama asfbsjafd sdafsafa sdafasf asfasfasf",
+    "rating": 4,
+    "images": []
+}
+
+### edit data ulasan
+PUT {{baseUrl}}/api/ulasan/DHbgWORKYf8mAhbul7KW
+Content-Type: application/json
+
+{
+    "judul": "webinar bla bla bla",
+}
+
+### delete data ulasan
+DELETE  {{baseUrl}}/api/ulasan/znuZQLzxkNsnF5Ho3NzS
