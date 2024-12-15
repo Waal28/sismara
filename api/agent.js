@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 export default class Agent {
   static async get(endpoint, params = {}) {
     try {
-      const response = await axios.get(`/api/${endpoint}`, {
+      const response = await axios.get(`/api${endpoint}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,7 +23,7 @@ export default class Agent {
 
   static async post(endpoint, payload, otherHeaders) {
     try {
-      const response = await axios.post(`/api/${endpoint}`, payload, {
+      const response = await axios.post(`/api${endpoint}`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           ...otherHeaders,
@@ -41,7 +41,7 @@ export default class Agent {
 
   static async put(endpoint, payload, otherHeaders = {}) {
     try {
-      const response = await axios.put(`/api/${endpoint}`, payload, {
+      const response = await axios.put(`/api${endpoint}`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           ...otherHeaders, // Menggabungkan otherHeaders dengan header lainnya
@@ -59,7 +59,7 @@ export default class Agent {
 
   static async delete(endpoint) {
     try {
-      const response = await axios.delete(`/api/${endpoint}`, {
+      const response = await axios.delete(`/api${endpoint}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
