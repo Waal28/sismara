@@ -71,3 +71,6 @@ export default function SocialIcons({ URL }) {
     </>
   );
 }
+SocialIcons.propTypes = {
+  URL: PropTypes.string,
+};

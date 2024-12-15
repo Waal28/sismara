@@ -14,7 +14,7 @@ import {
   ListItemText,
   Tooltip,
 } from "@mui/material";
-import { Cancel, Check, ExpandMore } from "@mui/icons-material";
+import { Cancel, Check } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { acceptOrRejectCandidate } from "@/api/src/peserta";
 import { useEventsState } from "@/context/EventsContext";

@@ -25,6 +25,7 @@ export default function ScanBarCode({ fetchMyEvents }) {
     return () => {
       html5QrcodeScanner.clear();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
