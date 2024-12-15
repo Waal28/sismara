@@ -72,5 +72,5 @@ export default function SocialIcons({ URL }) {
   );
 }
 SocialIcons.propTypes = {
-  URL: PropTypes.string,
+  URL: PropTypes.string.isRequired,
 };

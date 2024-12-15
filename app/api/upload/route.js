@@ -2,7 +2,7 @@ import { handleResponse } from "../route";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/server/config/firebase.mjs";
 
-export const POST = async (req, res) => {
+export const POST = async (req) => {
   const formData = await req.formData();
 
   const file = formData.get("image");
