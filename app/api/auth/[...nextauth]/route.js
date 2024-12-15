@@ -3,8 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import { FirestoreAdapter } from "@auth/firebase-adapter";
 import { cert } from "firebase-admin/app";
 import { validateEmailStudent } from "@/server/config/format";
-import axios from "axios";
 import * as jwt from "jsonwebtoken";
+import axios from "axios";
 
 export const authOptions = {
   providers: [
@@ -33,8 +33,8 @@ export const authOptions = {
       const { user, expires } = session;
       try {
         const mhs = await axios.post(
-          `${process.env.NEXTAUTH_URL}/api/auth/portal-login`,
-          session.user
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/portal-login`,
+          user
         );
         return {
           expires,
@@ -43,11 +43,7 @@ export const authOptions = {
         };
       } catch (error) {
         console.log(error);
-        return {
-          expires,
-          user,
-          token: jwt.sign(token, process.env.NEXT_PUBLIC_SECRET_KEY),
-        };
+        throw error;
       }
     },
     async signIn(res) {

@@ -1,20 +1,20 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
+// const token = localStorage.getItem("token");
 export default class Agent {
   static async get(endpoint, params = {}) {
     try {
       const response = await axios.get(`/api${endpoint}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
         ...params,
       });
-      const data = await response.data;
+      const data = response?.data;
 
       return data;
     } catch (error) {
-      if (error.response.data.message === "Forbidden") {
+      if (error?.response?.data?.message === "Forbidden") {
         window.location.href = "/admin/login";
       }
       throw error;
@@ -25,14 +25,14 @@ export default class Agent {
     try {
       const response = await axios.post(`/api${endpoint}`, payload, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
           ...otherHeaders,
         },
       });
-      const data = await response.data;
+      const data = response?.data;
       return data;
     } catch (error) {
-      if (error.response.data.message === "Forbidden") {
+      if (error?.response?.data?.message === "Forbidden") {
         window.location.href = "/admin/login";
       }
       throw error;
@@ -43,13 +43,13 @@ export default class Agent {
     try {
       const response = await axios.put(`/api${endpoint}`, payload, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
           ...otherHeaders, // Menggabungkan otherHeaders dengan header lainnya
         },
       });
       return response.data; // Tidak perlu await di sini
     } catch (error) {
-      if (error.response && error.response.data.message === "Forbidden") {
+      if (error.response && error?.response?.data?.message === "Forbidden") {
         window.location.href = "/admin/login"; // Redirect ke login jika Forbidden
       }
 
@@ -61,13 +61,13 @@ export default class Agent {
     try {
       const response = await axios.delete(`/api${endpoint}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
       });
-      const data = await response.data;
+      const data = response?.data;
       return data;
     } catch (error) {
-      if (error.response.data.message === "Forbidden") {
+      if (error?.response?.data?.message === "Forbidden") {
         window.location.href = "/admin/login";
       }
       throw error;

@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-catch */
 import Agent from "../agent";
 
-export async function loginMahasiswa() {
-  const response = await Agent.post("/auth/portal-login");
+export async function loginMahasiswa(data) {
+  const response = await Agent.post("/auth/portal-login", data);
   return response;
 }
 export async function editMahasiswa(id, data) {
