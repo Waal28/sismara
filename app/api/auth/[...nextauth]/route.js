@@ -4,9 +4,10 @@ import { FirestoreAdapter } from "@auth/firebase-adapter";
 import { cert } from "firebase-admin/app";
 import { validateEmailStudent } from "@/server/config/format";
 import * as jwt from "jsonwebtoken";
-import axios from "axios";
+import HttpError from "@/server/config/error";
+import MahasiswaService from "@/server/service/mahasiswa";
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -31,14 +32,19 @@ export const authOptions = {
     async session(res) {
       const { session, token } = res;
       const { user, expires } = session;
+      const { name, email, image } = user;
       try {
-        const mhs = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/portal-login`,
-          user
-        );
+        if (!name || !email || !image) {
+          throw new HttpError("Data tidak lengkap", 400);
+        }
+        const isEmailValid = validateEmailStudent(email);
+        if (!isEmailValid) {
+          throw new HttpError("Email tidak valid", 400);
+        }
+        const mhs = await MahasiswaService.login({ email, name, image });
         return {
           expires,
-          user: mhs.data.data,
+          user: mhs,
           token: jwt.sign(token, process.env.NEXT_PUBLIC_SECRET_KEY),
         };
       } catch (error) {
@@ -55,6 +61,5 @@ export const authOptions = {
       return true;
     },
   },
-};
-const handler = NextAuth(authOptions);
+});
 export { handler as GET, handler as POST };
