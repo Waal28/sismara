@@ -135,7 +135,6 @@ export default function LayoutAdmin({ children }) {
     }
     try {
       const response = await getAllMessage();
-      console.log(response.data);
       updateAdminState.allMsg(response.data.messages);
       updateAdminState.msgNoRead(response.data.msgNoRead);
     } catch (error) {
@@ -190,6 +189,7 @@ export default function LayoutAdmin({ children }) {
 
   useEffect(() => {
     fetchAllMsg();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshDataMsg]);
 
   return (

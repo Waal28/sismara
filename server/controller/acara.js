@@ -12,9 +12,7 @@ export default class AcaraController {
     }
   }
 
-  static async getOne(req, context) {
-    const id = context.params.id;
-
+  static async getOne(req, id) {
     try {
       const result = await AcaraService.getOne(id);
 
@@ -35,8 +33,7 @@ export default class AcaraController {
     }
   }
 
-  static async update(req, context) {
-    const id = context.params.id;
+  static async update(req, id) {
     const body = await req.json();
     try {
       const result = await AcaraService.update(id, body);
@@ -47,9 +44,7 @@ export default class AcaraController {
     }
   }
 
-  static async delete(req, context) {
-    const id = context.params.id;
-
+  static async delete(req, id) {
     try {
       await AcaraService.delete(id);
 

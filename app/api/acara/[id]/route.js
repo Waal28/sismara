@@ -1,14 +1,17 @@
 import AcaraController from "@/server/controller/acara";
 
 // client/app/api/acara/[id]/route.js
-export async function GET(req, context) {
-  return AcaraController.getOne(req, context);
+export async function GET(req, { params }) {
+  const id = params.id;
+  return AcaraController.getOne(req, id);
 }
 
-export async function PUT(req, context) {
-  return AcaraController.update(req, context);
+export async function PUT(req, { params }) {
+  const id = params.id;
+  return AcaraController.update(req, id);
 }
 
-export async function DELETE(req, context) {
-  return AcaraController.delete(req, context);
+export async function DELETE(req, { params }) {
+  const id = params.id;
+  return AcaraController.delete(req, id);
 }

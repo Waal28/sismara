@@ -10,29 +10,35 @@ import { Group, Message } from "@mui/icons-material";
 export const general = {
   copyright: "Copyright © 2024. Wal Husna Faizul.",
   prodi: [
-    { name: "Teknik Sipil", link: "/prodi/teknik-sipil" },
-    { name: "Teknik Perminyakan", link: "/prodi/teknik-perminyakan" },
-    { name: "Teknik Mesin", link: "/prodi/teknik-mesin" },
-    { name: "Teknik PWK", link: "/prodi/teknik-pwk" },
-    { name: "Teknik Informatika", link: "/prodi/teknik-informatika" },
-    { name: "Teknik Geologi", link: "/prodi/teknik-geologi" },
+    { name: "Teknik Sipil", link: "https://eng.uir.ac.id/teknik-sipil" },
+    {
+      name: "Teknik Perminyakan",
+      link: "https://eng.uir.ac.id/teknik-perminyakan",
+    },
+    { name: "Teknik Mesin", link: "https://eng.uir.ac.id/teknik-mesin" },
+    { name: "Teknik PWK", link: "https://eng.uir.ac.id/teknik-pwk" },
+    {
+      name: "Teknik Informatika",
+      link: "https://eng.uir.ac.id/teknik-informatika",
+    },
+    { name: "Teknik Geologi", link: "https://eng.uir.ac.id/teknik-geologi" },
   ],
   layanan: [
     {
       name: "Universitas Islam Riau",
-      link: "/pendaftaran",
+      link: "https://uir.ac.id",
     },
     {
       name: "Fakultas Teknik",
-      link: "/pendaftaran",
+      link: "https://eng.uir.ac.id",
     },
     {
       name: "Biro Administrasi dan Akademik Kemahasiswaan",
-      link: "/pendaftaran",
+      link: "https://dlma.uir.ac.id",
     },
     {
       name: "Biro Sistem Informasi dan Komputasi",
-      link: "/pendaftaran",
+      link: "https://simfokom.uir.ac.id",
     },
   ],
   logo: "/images/Logo_UIR.svg",
