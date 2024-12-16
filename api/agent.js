@@ -4,12 +4,15 @@ import axios from "axios";
 export default class Agent {
   static async get(endpoint, params = {}) {
     try {
-      const response = await axios.get(`/api${endpoint}`, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-        },
-        ...params,
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api${endpoint}`,
+        {
+          headers: {
+            // Authorization: `Bearer ${token}`,
+          },
+          ...params,
+        }
+      );
       const data = response?.data;
 
       return data;
@@ -23,12 +26,16 @@ export default class Agent {
 
   static async post(endpoint, payload, otherHeaders) {
     try {
-      const response = await axios.post(`/api${endpoint}`, payload, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-          ...otherHeaders,
-        },
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api${endpoint}`,
+        payload,
+        {
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            ...otherHeaders,
+          },
+        }
+      );
       const data = response?.data;
       return data;
     } catch (error) {
@@ -41,12 +48,16 @@ export default class Agent {
 
   static async put(endpoint, payload, otherHeaders = {}) {
     try {
-      const response = await axios.put(`/api${endpoint}`, payload, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-          ...otherHeaders, // Menggabungkan otherHeaders dengan header lainnya
-        },
-      });
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api${endpoint}`,
+        payload,
+        {
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            ...otherHeaders, // Menggabungkan otherHeaders dengan header lainnya
+          },
+        }
+      );
       return response.data; // Tidak perlu await di sini
     } catch (error) {
       if (error.response && error?.response?.data?.message === "Forbidden") {
@@ -59,11 +70,14 @@ export default class Agent {
 
   static async delete(endpoint) {
     try {
-      const response = await axios.delete(`/api${endpoint}`, {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api${endpoint}`,
+        {
+          headers: {
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response?.data;
       return data;
     } catch (error) {

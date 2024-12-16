@@ -60,7 +60,13 @@ export default class AcaraController {
   }
   static async getBySearch(search, filters, dateRange, skip, limit) {
     try {
-      const result = await AcaraService.filterAndSearch(search, filters, dateRange, skip, limit);
+      const result = await AcaraService.filterAndSearch(
+        search,
+        filters,
+        dateRange,
+        skip,
+        limit
+      );
 
       return handleResponse(200, "Berhasil menyaring data", result);
     } catch (error) {
