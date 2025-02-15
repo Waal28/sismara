@@ -1,5 +1,5 @@
 import PesertaService from "@/server/service/peserta";
-import { handleResponse } from "../../route";
+import { handleResponse } from "@/app/api/route";
 
 // export async function GET(request) {
 //   const { searchParams } = new URL(request.url); // Parsing query params

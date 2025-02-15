@@ -1,5 +1,5 @@
 import PesertaService from "@/server/service/peserta";
-import { handleResponse } from "../route";
+import { handleResponse } from "@/app/api/route";
 
 export async function POST(req) {
   const body = await req.json();
