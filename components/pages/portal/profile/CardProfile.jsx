@@ -114,7 +114,7 @@ export default function CardProfile() {
               className="py-2 px-4 rounded-md lg:text-sm text-xs text-teal-500 hover:bg-gray-300 hover:text-teal-600 dark:hover:bg-gray-800 font-semibold"
               onClick={() => handleOpen("editProfile")}
             >
-              Edit Pofil
+              Edit Profil
             </button>
             {/* Modal */}
             <Modal

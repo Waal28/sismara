@@ -39,7 +39,7 @@ export default function ModalChangePassword({ handleLogout }) {
       await handleLogout();
       updateAppState.modal({ open: false });
     } catch (error) {
-      console.log(error);
+      console.log(error?.response?.data?.message);
       toast.error(error?.response?.data?.message || "Terjadi kesalahan", {
         theme: "colored",
       });

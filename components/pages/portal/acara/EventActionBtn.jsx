@@ -86,10 +86,18 @@ export default function EventActionBtn() {
     const isVolunteerCandidate = dataCandidate.some(
       (participant) => participant.type === "volunteer"
     );
+    const isUserPresent = dataApproved.some(
+      (participant) =>
+        participant.type === "peserta" && participant.is_present === true
+    );
 
     if (currEvent.status === "ongoing") {
       if (isParticipantApproved) {
-        updateState("btnConfig1", btnPresence);
+        if (isUserPresent) {
+          updateState("btnConfig1", btnUserIsPresence);
+        } else {
+          updateState("btnConfig1", btnPresence);
+        }
         updateState("btnConfig2", null);
       } else if (isVolunteerApproved) {
         updateState("btnConfig1", null);
@@ -191,13 +199,18 @@ export default function EventActionBtn() {
   };
   const btnUserIsNotLogin = {
     label: "Login Untuk Ikuti Acara",
-    className: "bg-gray-200 hover:bg-gray-300",
+    className: "bg-blue-800 hover:bg-blue-900",
     onClick: handleClickLogin,
   };
   const btnPresence = {
     label: "Absensi Acara",
     className: "bg-blue-700 hover:bg-blue-600",
     onClick: handleClickPresence,
+  };
+  const btnUserIsPresence = {
+    label: "Anda Sudah Absen",
+    className: "bg-orange-800 cursor-default",
+    onClick: () => {},
   };
 
   // React Effect untuk fetch data ketika ada perubahan user atau event

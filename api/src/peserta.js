@@ -65,18 +65,22 @@ export async function getEventParticipantsAndVolunteers(idEvent) {
   }
 }
 export async function getCandidateVolunteer(idEvent) {
-  const response = await Agent.post(`/peserta/candidate-volunteer/${idEvent}`);
+  const response = await Agent.post(`/peserta-candidateVolunteer/${idEvent}`);
   return response;
 }
 export async function addCandidateVolunteer(data) {
-  const response = await Agent.post(`/peserta/candidate-volunteer`, data);
+  const response = await Agent.post(`/peserta-candidateVolunteer`, data);
   return response;
 }
 export async function acceptOrRejectCandidate(id, data) {
-  const response = await Agent.put(`/peserta/candidate-volunteer/${id}`, data);
+  const response = await Agent.put(`/peserta-candidateVolunteer/${id}`, data);
   return response;
 }
 export async function deleteParticipantOrVolunteer(data) {
-  const response = await Agent.post(`/peserta/participant-volunteer/`, data);
+  const response = await Agent.post(`/peserta-participantVolunteer/`, data);
+  return response;
+}
+export async function participantPresent(data) {
+  const response = await Agent.post(`/peserta-present/`, data);
   return response;
 }

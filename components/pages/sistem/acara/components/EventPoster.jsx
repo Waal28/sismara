@@ -34,6 +34,7 @@ import Link from "next/link";
 import { useAdminState } from "@/context/AdminContext";
 import { toast } from "react-toastify";
 import ModalSeePosters from "./ModalSeePosters";
+import { exportEventToPdf } from "@/server/config/exportTo";
 
 export default function EventPoster() {
   const { updateAppState } = useAppState();
@@ -76,7 +77,7 @@ export default function EventPoster() {
       icon: XlsxIcon,
       color: "text-green-500",
       onClick: () => {
-        console.log("waal");
+        exportEventToPdf(currEvent);
       },
     },
     {
@@ -134,9 +135,7 @@ export default function EventPoster() {
   function handleClickPoster() {
     updateAppState.modal({
       open: true,
-      children: (
-        <ModalSeePosters />
-      ),
+      children: <ModalSeePosters />,
     });
   }
 
@@ -286,7 +285,8 @@ export default function EventPoster() {
           <ImageIcon className="mr-2" />
           Lihat Poster
         </button>
-        {(currentAdmin.isAdmin || !listStatusForDisabledBtn.includes(status)) && (
+        {(currentAdmin.isAdmin ||
+          !listStatusForDisabledBtn.includes(status)) && (
           <button
             onClick={handleClickPublish}
             className="text-sm sm:text-base flex text-white bg-teal-700 border-0 py-2 px-6 focus:outline-none hover:bg-teal-600 rounded"

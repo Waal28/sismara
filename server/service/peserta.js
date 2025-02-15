@@ -273,4 +273,35 @@ export default class PesertaService {
     }
     await CrudConfig.deleteData(type, id);
   }
+  static async present(body) {
+    const { mhsId, eventId, timestamp } = body;
+    if (!mhsId || !eventId || !timestamp) {
+      throw new HttpError("Data tidak lengkap", 400);
+    }
+    // Validasi timestamp
+    const currentTime = new Date();
+    const clientTime = new Date(timestamp);
+    const timeDifference = Math.abs(currentTime - clientTime); // Dalam milidetik
+
+    if (isNaN(clientTime)) {
+      throw new HttpError("Format waktu tidak valid", 400);
+    }
+
+    if (timeDifference > 10000) {
+      // Maksimal selisih 10 detik
+      throw new HttpError("Waktu sudah melebihi batas 10 detik", 400);
+    }
+    const filters = {
+      id_event: eventId,
+      id_mhs: mhsId,
+    };
+    const peserta = await CrudConfig.filterAndSearchData("peserta", filters);
+    if (peserta.length < 1) {
+      throw new HttpError("Peserta sudah terdaftar", 400);
+    }
+    const result = await CrudConfig.updateData("peserta", peserta[0].id, {
+      is_present: true,
+    });
+    return result;
+  }
 }

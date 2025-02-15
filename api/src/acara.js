@@ -50,10 +50,10 @@ export async function deleteEvent(id) {
   return response;
 }
 export async function uploadEventCertificate(id, data) {
-  const response = await Agent.put(`/acara/upload-certificate/${id}`, data);
+  const response = await Agent.put(`/acara-uploadCertificate/${id}`, data);
   return response;
 }
 export async function downloadEventCertificate(data) {
-  const response = await Agent.post(`/acara/download-certificate`, data);
+  const response = await Agent.post(`/acara-downloadCertificate`, data);
   return response;
 }

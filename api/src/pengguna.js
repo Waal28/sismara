@@ -48,7 +48,7 @@ export async function getEventOrganizerBySearch(search) {
 }
 export async function changePasswordUser(id, data) {
   try {
-    const response = await Agent.put(`/pengguna/change-password/${id}`, data);
+    const response = await Agent.put(`/pengguna-changePassword/${id}`, data);
     return response;
   } catch (error) {
     throw error;
@@ -56,7 +56,7 @@ export async function changePasswordUser(id, data) {
 }
 export async function changePasswordUserForAdmin(id, data) {
   try {
-    const response = await Agent.put(`/pengguna/change-password/${id}`, {
+    const response = await Agent.put(`/pengguna-changePassword/${id}`, {
       ...data,
       isAdmin: true,
     });

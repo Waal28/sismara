@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Typography, Button, Slider, Box, Tooltip } from "@mui/material";
 import { DownloadIcon, ImageUploadIcon } from "@/components/atoms/CustomIcon";
-import { downloadEventCertificate, uploadEventCertificate } from "@/api/src/acara";
+import {
+  downloadEventCertificate,
+  uploadEventCertificate,
+} from "@/api/src/acara";
 import { toast } from "react-toastify";
 import { uploadImages } from "@/api/src/dashboard";
 // import { getImage } from "@/constants";
@@ -18,7 +21,12 @@ const FONTFAMILY = "Arial"; // Pilihan font family
 const FONTSIZE = 30; // Ukuran font default
 const COLOR = "#000000";
 
-function CertificateGenerator({ event, certificateFor, fetchEvent = async () => {}, isFromProfileMhs = false }) {
+function CertificateGenerator({
+  event,
+  certificateFor,
+  fetchEvent = async () => {},
+  isFromProfileMhs = false,
+}) {
   const { updateAppState, currentUser } = useAppState();
   const [state, setState] = useState({
     loading: false,
@@ -31,8 +39,8 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
     offset: { x: 0, y: 0 },
     fontSize: FONTSIZE,
     fontFamily: FONTFAMILY,
-    fontColor: COLOR
-  })
+    fontColor: COLOR,
+  });
   const {
     loading,
     template,
@@ -44,7 +52,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
     offset,
     fontSize,
     fontFamily,
-    fontColor
+    fontColor,
   } = state;
   const canvasRef = useRef(null); // Referensi untuk elemen canvas
   function updateState(newValue) {
@@ -58,7 +66,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
     if (!file) {
       toast.error("File tidak boleh kosong", {
         theme: "colored",
-      })
+      });
       return; // Jika tidak ada file, langsung keluar dari fungsi
     }
     const invalidFiles = file.size > 5 * 1000 * 1000;
@@ -72,7 +80,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
     }
     updateState({
       image: URL.createObjectURL(file),
-      template: file
+      template: file,
     });
   };
 
@@ -138,7 +146,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
         fontFamily,
         fontColor,
         maxCharacters,
-      }
+      },
     };
     const formData = new FormData();
     formData.append("image", template);
@@ -148,7 +156,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
         const templateUrl = templateRes.data.fileName;
         payload.data.template = templateUrl;
       }
-      await uploadEventCertificate(event.id, payload)
+      await uploadEventCertificate(event.id, payload);
       await fetchEvent({ id: event.id, event });
       toast.success("Sertifikat berhasil disimpan", { theme: "colored" });
       handleCloseModal();
@@ -156,7 +164,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
       console.log(error);
       toast.error(error?.response?.data?.message || "Terjadi kesalahan", {
         theme: "colored",
-      })
+      });
     } finally {
       updateState({ loading: false });
     }
@@ -165,7 +173,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
     if (!canvasRef.current || !image) {
       toast.error("Sertifikat belum tersedia", {
         theme: "colored",
-      })
+      });
       return;
     }
 
@@ -191,7 +199,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
       console.log(error);
       toast.error(error?.response?.data?.message || "Terjadi kesalahan", {
         theme: "colored",
-      })
+      });
     } finally {
       updateState({ loading: false });
     }
@@ -214,26 +222,37 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
       downloadCertificate(certTemplate.template);
     }
     updateState({
-      name: (certTemplate?.maxCharacters && participantName && participantName.slice(0, certTemplate?.maxCharacters)) || EX_NAME.slice(0, MAX_CHARACTERS),
+      name:
+        (certTemplate?.maxCharacters &&
+          participantName &&
+          participantName.slice(0, certTemplate?.maxCharacters)) ||
+        EX_NAME.slice(0, MAX_CHARACTERS),
       position: certTemplate?.position || POSITION,
       fontSize: certTemplate?.fontSize || FONTSIZE,
       fontFamily: certTemplate?.fontFamily || FONTFAMILY,
       fontColor: certTemplate?.fontColor || COLOR,
-      maxCharacters: certTemplate?.maxCharacters || MAX_CHARACTERS
+      maxCharacters: certTemplate?.maxCharacters || MAX_CHARACTERS,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event, certificateFor]);
-  
+
   return (
     <React.Fragment>
-      {isFromProfileMhs && event.is_certificate &&
+      {isFromProfileMhs && event.is_certificate && (
         <Tooltip title="Unduh Sertifikat" placement="left">
-          <div onClick={handleDownload} className="absolute lg:top-5 top-2 lg:right-5 right-2 z-50 w-fit h-fit">
+          <div
+            onClick={handleDownload}
+            className="absolute lg:top-5 top-2 lg:right-5 right-2 z-50 w-fit h-fit"
+          >
             <DownloadIcon className="lg:w-8 w-7 lg:h-8 h-7 p-1 rounded-full bg-white text-blue-500 transition-all duration-300 transform hover:text-blue-400 hover:scale-105 dark:bg-gray-800" />
           </div>
         </Tooltip>
-      }
-      <main className={`${isFromProfileMhs ? "hidden" : ""} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl sm:w-[85%] w-[90%] max-h-screen overflow-auto`}>
+      )}
+      <main
+        className={`${
+          isFromProfileMhs ? "hidden" : ""
+        } absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl sm:w-[85%] w-[90%] max-h-screen overflow-auto`}
+      >
         <div className="w-full dark:bg-gray-900 bg-white rounded-3xl dark:text-white text-gray-800 p-5 sm:p-10">
           <Typography variant="h4" align="center" gutterBottom>
             Generate Sertifikat {certificateFor}
@@ -251,7 +270,7 @@ function CertificateGenerator({ event, certificateFor, fetchEvent = async () => 
                   onChange={(e) => {
                     updateState({
                       maxCharacters: e.target.value,
-                      name: EX_NAME.slice(0, e.target.value)
+                      name: EX_NAME.slice(0, e.target.value),
                     });
                   }}
                   className="w-full bg-gray-50 border border-gray-300 text-teal-800 lg:text-sm md:text-sm sm:text-sm text-xs rounded-lg focus:ring-teal-600 focus:border-teal-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-teal-600"
@@ -377,7 +396,7 @@ const styles = {
     maxWidth: "800px", // Sesuai dengan ukuran asli canvas
     height: "auto", // Otomatis menyesuaikan tinggi
   },
-}
+};
 CertificateGenerator.propTypes = {
   event: PropTypes.object.isRequired,
   certificateFor: PropTypes.string.isRequired,

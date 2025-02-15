@@ -2,7 +2,7 @@
 import Agent from "../agent";
 
 export async function loginMahasiswa(data) {
-  const response = await Agent.post("/auth/portal-login", data);
+  const response = await Agent.post("/auth-portalLogin", data);
   return response;
 }
 export async function editMahasiswa(id, data) {
