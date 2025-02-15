@@ -19,6 +19,7 @@
     "@mui/x-date-pickers": "^7.15.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "caniuse-lite": "^1.0.30001699",
     "chart.js": "^4.4.4",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
