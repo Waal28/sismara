@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 
+export const config = {
+  runtime: "edge", // Ubah jadi Edge Function
+};
+
 export function handleResponse(statusCode, message, result) {
   if (statusCode === 200) {
     return NextResponse.json(
