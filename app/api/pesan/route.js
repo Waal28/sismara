@@ -1,5 +1,5 @@
 import PesanService from "@/server/service/pesan";
-import { handleResponse } from "../route";
+import { handleResponse } from "@/app/api/route";
 
 // client/app/api/pesan/route.js
 export async function GET() {

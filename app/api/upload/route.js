@@ -1,4 +1,4 @@
-import { handleResponse } from "../route";
+import { handleResponse } from "@/app/api/route";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/server/config/firebase.mjs";
 

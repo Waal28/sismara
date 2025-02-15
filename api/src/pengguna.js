@@ -3,7 +3,7 @@ import Agent from "../agent";
 
 export async function addEventOrganizer(data) {
   try {
-    const response = await Agent.post("/pengguna/", data);
+    const response = await Agent.post("/root/pengguna/", data);
     return response;
   } catch (error) {
     throw error;
@@ -11,7 +11,7 @@ export async function addEventOrganizer(data) {
 }
 export async function editEventOrganizer(id, data) {
   try {
-    const response = await Agent.put(`/pengguna/${id}`, data);
+    const response = await Agent.put(`/root/pengguna/${id}`, data);
     return response;
   } catch (error) {
     throw error;
@@ -19,7 +19,7 @@ export async function editEventOrganizer(id, data) {
 }
 export async function getEventOrganizer() {
   try {
-    const response = await Agent.get("/pengguna/");
+    const response = await Agent.get("/root/pengguna/");
     return response;
   } catch (error) {
     throw error;
@@ -27,7 +27,7 @@ export async function getEventOrganizer() {
 }
 export async function deleteEventOrganizer(id) {
   try {
-    const response = await Agent.delete(`/pengguna/${id}`);
+    const response = await Agent.delete(`/root/pengguna/${id}`);
     return response;
   } catch (error) {
     throw error;
@@ -38,7 +38,7 @@ export async function getEventOrganizerBySearch(search) {
     search: search || undefined,
   };
   try {
-    const response = await Agent.get("/pengguna", {
+    const response = await Agent.get("/root/pengguna", {
       params,
     });
     return response;
@@ -48,7 +48,10 @@ export async function getEventOrganizerBySearch(search) {
 }
 export async function changePasswordUser(id, data) {
   try {
-    const response = await Agent.put(`/pengguna-changePassword/${id}`, data);
+    const response = await Agent.put(
+      `/root/pengguna-changePassword/${id}`,
+      data
+    );
     return response;
   } catch (error) {
     throw error;
@@ -56,7 +59,7 @@ export async function changePasswordUser(id, data) {
 }
 export async function changePasswordUserForAdmin(id, data) {
   try {
-    const response = await Agent.put(`/pengguna-changePassword/${id}`, {
+    const response = await Agent.put(`/root/pengguna-changePassword/${id}`, {
       ...data,
       isAdmin: true,
     });

@@ -1,5 +1,5 @@
 import UlasanService from "@/server/service/ulasan";
-import { handleResponse } from "../../route";
+import { handleResponse } from "@/app/api/route";
 
 // client/app/api/pengguna/[id]/route.js
 export async function GET(req, context) {

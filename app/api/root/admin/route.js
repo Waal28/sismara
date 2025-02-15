@@ -1,33 +1,21 @@
-import { handleResponse } from "../route";
-import PesertaService from "@/server/service/peserta";
-
-// client/app/api/peserta/route.js
+import AdminService from "@/server/service/admin";
+import { handleResponse } from "@/app/api/route";
+// client/app/api/admin/route.js
 export async function GET(request) {
   const { searchParams } = new URL(request.url); // Parsing query params
 
   const search = searchParams.get("search") || null;
-  const idMhs = searchParams.get("idMhs") || null;
   const idEvent = searchParams.get("idEvent") || null;
-  const participantAndVolunteer =
-    searchParams.get("participantAndVolunteer") || null;
 
   try {
     // Jika ada query params, gunakan untuk filter, jika tidak ambil semua data
     let result = {};
     if (search) {
-      result = await PesertaService.filterAndSearch(search);
-    } else if (idMhs) {
-      result = await PesertaService.getMyEventsByIdMhs(idMhs);
+      result = await AdminService.filterAndSearch(search);
     } else if (idEvent) {
-      if (participantAndVolunteer) {
-        result = await PesertaService.getEventParticipantsAndVolunteers(
-          idEvent
-        );
-      } else {
-        result = await PesertaService.getMyEventsByIdEvent(idEvent);
-      }
+      result = await AdminService.getReviewByIdEvent(idEvent);
     } else {
-      result = await PesertaService.getAll();
+      result = await AdminService.getAll();
     }
     return handleResponse(200, "Berhasil menyaring data", result);
   } catch (error) {
@@ -37,7 +25,7 @@ export async function GET(request) {
 export async function POST(req) {
   const body = await req.json();
   try {
-    const result = await PesertaService.create(body);
+    const result = await AdminService.create(body);
 
     return handleResponse(200, "Berhasil menambahkan data", result);
   } catch (error) {

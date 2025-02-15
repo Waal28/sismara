@@ -2,7 +2,7 @@
 import Agent from "../agent";
 
 export async function getDashboardChart(prodi) {
-  const response = await Agent.get(`/acara`, {
+  const response = await Agent.get(`/root/acara`, {
     params: {
       isChart: true,
       prodi: prodi ?? "all",
