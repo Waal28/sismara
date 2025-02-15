@@ -1,5 +1,5 @@
 import PenggunaService from "@/server/service/pengguna";
-import { handleResponse } from "../../route";
+import { handleResponse } from "../route";
 
 // client/app/api/auth/admin/login/route.js
 export async function POST(req) {
