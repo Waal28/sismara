@@ -23,7 +23,9 @@ export function sortObjectKeys(input) {
       // Rekursi jika value adalah objek atau array
       if (Array.isArray(value)) {
         sortedObj[key] = value.map((item) =>
-          typeof item === "object" && item !== null ? sortObjectKeys(item) : item
+          typeof item === "object" && item !== null
+            ? sortObjectKeys(item)
+            : item
         );
       } else if (typeof value === "object" && value !== null) {
         sortedObj[key] = sortObjectKeys(value);
@@ -73,4 +75,29 @@ export function formatRupiah(amount) {
     currency: "IDR",
     minimumFractionDigits: 0, // Hilangkan desimal
   }).format(amount);
+}
+
+export function truncateName(name, maxCharacter) {
+  if (name.length <= maxCharacter) return name; // Jika tidak melebihi batas, kembalikan nama asli
+
+  let words = name.split(" "); // Pisahkan nama berdasarkan spasi
+  let muhammadIndex = words.findIndex(
+    (word) => word.toLowerCase() === "muhammad"
+  );
+
+  if (muhammadIndex !== -1) {
+    words[muhammadIndex] = "m."; // Singkat kata 'Muhammad' menjadi 'm.'
+  }
+
+  let newName = words.join(" "); // Gabungkan kembali
+
+  // Jika masih terlalu panjang setelah mempersingkat "Muhammad", singkat kata terakhir
+  if (newName.length > maxCharacter) {
+    words[words.length - 1] = words[words.length - 1].charAt(0) + "."; // Singkat kata terakhir
+    newName = words.join(" ");
+  }
+
+  return newName.length <= maxCharacter
+    ? newName
+    : newName.substring(0, maxCharacter - 1) + "."; // Jika masih panjang, potong langsung
 }

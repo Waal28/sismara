@@ -12,22 +12,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { addReview, getReviewsEvent } from "@/api/src/ulasan";
 import { useEventsState } from "@/context/EventsContext";
-import {
-  DEFAULT_USER_IMG,
-  getImage,
-  listStatusForDisabledBtn,
-} from "@/constants";
+import { getImage } from "@/constants";
 import { Loader3 } from "@/components/atoms/CustomLoader";
 import { useAppState } from "@/context/AppStateContext";
 import { toast } from "react-toastify";
 import { uploadImages } from "@/api/src/dashboard";
-import {
-  Avatar,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { CircularProgress, Divider, IconButton, Tooltip } from "@mui/material";
 
 const stars = [5, 4, 3, 2, 1];
 export default function ReviewEvent({ isFromAdmin = false }) {
@@ -58,8 +48,9 @@ export default function ReviewEvent({ isFromAdmin = false }) {
           review_id: item.id,
           participant_id: item.mahasiswa.id,
           participant_name: item.mahasiswa.name,
-          participant_img:
-            item?.mahasiswa?.image || item?.mahasiswa?.defaultImg,
+          participant_img: item?.mahasiswa?.image
+            ? getImage(item?.mahasiswa?.image)
+            : item?.mahasiswa?.defaultImg,
           rating: item.rating,
           images: item.images,
           review_content: item.content,
@@ -176,7 +167,7 @@ export default function ReviewEvent({ isFromAdmin = false }) {
     data && (
       <main>
         <div className="w-full mt-14 flex flex-col gap-2 py-5 rounded-lg dark:bg-custom-tertiary bg-gray-white dark:text-white text-black">
-          <div className="flex items-center gap-1 mb-5">
+          <div className="flex items-center gap-1 sm:mb-5 mb-2">
             <h1 className="text-3xl font-bold">{data.total_rating}</h1>
             <FullStarIcon className="text-yellow-500 w-8 h-8" />
             <h1 className="ml-2 sm:text-2xl text-xl font-semibold">
@@ -184,7 +175,7 @@ export default function ReviewEvent({ isFromAdmin = false }) {
             </h1>
           </div>
           {/* Tags */}
-          <div className="flex flex-wrap gap-5 w-full py-2">
+          <div className="flex flex-wrap sm:gap-5 gap-2 w-full py-2">
             {stars.map((star) => (
               <span
                 key={star}
@@ -222,18 +213,19 @@ export default function ReviewEvent({ isFromAdmin = false }) {
                   {/* Profile and Rating */}
                   <div className="flex justify justify-between">
                     <div className="flex gap-2">
-                      <Avatar
-                        src={
-                          review.participant_img
-                            ? getImage(review.participant_img)
-                            : DEFAULT_USER_IMG
-                        }
-                        alt="..."
-                        className="w-7 h-7"
-                      />
-                      <span>{review.participant_name}</span>
+                      <div className="overflow-hidden w-7 h-7 rounded-full">
+                        <Image
+                          src={review.participant_img}
+                          alt="..."
+                          width={28}
+                          height={28}
+                        />
+                      </div>
+                      <span className="sm:pt-0.5 pt-1 sm:text-base text-sm">
+                        {review.participant_name}
+                      </span>
                       {review.user_as && (
-                        <span className="h-fit bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-gray-800 dark:text-gray-300">
+                        <span className="h-fit sm:mt-0.5 mt-1 bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-gray-800 dark:text-gray-300">
                           {review.user_as}
                         </span>
                       )}
@@ -247,7 +239,9 @@ export default function ReviewEvent({ isFromAdmin = false }) {
                       ))}
                     </div>
                   </div>
-                  <div>{review.review_content}</div>
+                  <div className="sm:text-sm text-xs">
+                    {review.review_content}
+                  </div>
                   <div className="flex gap-2">
                     {review.images.map((image, i) => (
                       <Link key={i} href={getImage(image)} target="_blank">
@@ -261,7 +255,7 @@ export default function ReviewEvent({ isFromAdmin = false }) {
                       </Link>
                     ))}
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between sm:text-sm text-xs">
                     <span>
                       {format(
                         new Date(review.review_date),
@@ -277,92 +271,88 @@ export default function ReviewEvent({ isFromAdmin = false }) {
             )}
           </div>
         </div>
-        {!isFromAdmin &&
-          listStatusForDisabledBtn.includes(currEvent.status) && (
-            <>
-              <div className="mb-10 mt-8">
-                <Divider className="dark:bg-gray-500 bg-gray-300" />
-              </div>
-              <div className="w-full mb-5">
-                <span className="flex items-center mb-5 sm:text-2xl text-xl font-medium text-teal-800 dark:text-white">
-                  <CommentIcon className="mr-2 w-8 h-8 text-teal-500" />
-                  Tuliskan Review
-                </span>
-                <input
-                  type="file"
-                  name="image"
-                  id="image"
-                  accept="image/jpeg, image/png, image/jpg"
-                  hidden
-                  onChange={handleUploadImage}
-                />
-                <textarea
-                  name="content"
-                  value={content}
-                  onChange={(e) => updateState("content", e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-300 text-teal-800 lg:text-sm md:text-sm sm:text-sm text-xs rounded-lg focus:ring-teal-600 focus:border-teal-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-teal-600"
-                  placeholder="Tuliskan Review"
-                  required
-                  rows="4"
-                />
-                <div className="flex gap-2 mt-5">
-                  {images.map((image, i) => (
-                    <div key={i} className="relative">
-                      <DeleteIcon
-                        onClick={() => removeImage(i)}
-                        className="h-6 w-6 cursor-pointer absolute -top-2 -right-2 text-white rounded-full bg-red-500 hover:bg-red-600 p-1"
-                      />
-                      <Link href={URL.createObjectURL(image)} target="_blank">
-                        <Image
-                          className="object-fill w-16 h-16"
-                          src={URL.createObjectURL(image)}
-                          alt="..."
-                          width={100}
-                          height={100}
-                        />
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-1 mt-3 items-center">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <FullStarIcon
-                      key={index}
-                      onClick={() => updateState("rating", index + 1)}
-                      className={`h-6 w-6 cursor-pointer ${
-                        index < rating ? "text-yellow-500" : "text-gray-400"
-                      }`}
+        {!isFromAdmin && ["ongoing", "closed"].includes(currEvent.status) && (
+          <>
+            <div className="mb-10 mt-8">
+              <Divider className="dark:bg-gray-500 bg-gray-300" />
+            </div>
+            <div className="w-full mb-5">
+              <span className="flex items-center mb-5 sm:text-2xl text-xl font-medium text-teal-800 dark:text-white">
+                <CommentIcon className="mr-2 w-8 h-8 text-teal-500" />
+                Tuliskan Review
+              </span>
+              <input
+                type="file"
+                name="image"
+                id="image"
+                accept="image/jpeg, image/png, image/jpg"
+                hidden
+                onChange={handleUploadImage}
+              />
+              <textarea
+                name="content"
+                value={content}
+                onChange={(e) => updateState("content", e.target.value)}
+                className="w-full bg-gray-50 border border-gray-300 text-teal-800 lg:text-sm md:text-sm sm:text-sm text-xs rounded-lg focus:ring-teal-600 focus:border-teal-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-teal-600"
+                placeholder="Tuliskan Review"
+                required
+                rows="4"
+              />
+              <div className="flex gap-2 mt-5">
+                {images.map((image, i) => (
+                  <div key={i} className="relative">
+                    <DeleteIcon
+                      onClick={() => removeImage(i)}
+                      className="h-6 w-6 cursor-pointer absolute -top-2 -right-2 text-white rounded-full bg-red-500 hover:bg-red-600 p-1"
                     />
-                  ))}
-                  <div className="ml-5">
-                    <Tooltip title="Upload Gambar" placement="top">
-                      <label htmlFor="image">
-                        <IconButton
-                          component="span"
-                          className="dark:bg-gray-600"
-                        >
-                          <ImageSearchIcon className="h-5 w-5 dark:text-teal-500 text-teal-700" />
-                        </IconButton>
-                      </label>
-                    </Tooltip>
+                    <Link href={URL.createObjectURL(image)} target="_blank">
+                      <Image
+                        className="object-fill w-16 h-16"
+                        src={URL.createObjectURL(image)}
+                        alt="..."
+                        width={100}
+                        height={100}
+                      />
+                    </Link>
                   </div>
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    disabled={loadingSubmit}
-                    className="w-fit text-white bg-teal-600 hover:bg-teal-700 focus:ring-2 focus:outline-none focus:ring-teal-700 font-medium rounded-lg lg:text-sm md:text-sm text-xs px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-300"
-                    onClick={handleSubmitReview}
-                  >
-                    {loadingSubmit ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : (
-                      "Kirim"
-                    )}
-                  </button>
+                ))}
+              </div>
+              <div className="flex gap-1 mt-3 items-center">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <FullStarIcon
+                    key={index}
+                    onClick={() => updateState("rating", index + 1)}
+                    className={`h-6 w-6 cursor-pointer ${
+                      index < rating ? "text-yellow-500" : "text-gray-400"
+                    }`}
+                  />
+                ))}
+                <div className="ml-5">
+                  <Tooltip title="Upload Gambar" placement="top">
+                    <label htmlFor="image">
+                      <IconButton component="span" className="dark:bg-gray-600">
+                        <ImageSearchIcon className="h-5 w-5 dark:text-teal-500 text-teal-700" />
+                      </IconButton>
+                    </label>
+                  </Tooltip>
                 </div>
               </div>
-            </>
-          )}
+              <div className="flex justify-end">
+                <button
+                  disabled={loadingSubmit}
+                  className="w-fit text-white bg-teal-600 hover:bg-teal-700 focus:ring-2 focus:outline-none focus:ring-teal-700 font-medium rounded-lg lg:text-sm md:text-sm text-xs px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-300"
+                  onClick={handleSubmitReview}
+                >
+                  {loadingSubmit ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : (
+                    "Kirim"
+                  )}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </main>
     )
   );

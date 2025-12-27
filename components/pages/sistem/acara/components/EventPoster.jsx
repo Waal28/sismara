@@ -13,11 +13,11 @@ import {
   SadIcon,
   StartDateIcon,
   VideoIcon,
-  XlsxIcon,
+  PdfIcon,
 } from "@/components/atoms/CustomIcon";
 import RunDownnEvent from "@/components/pages/portal/acara/RunDownnEvent";
 import { formatDateTime, formatRupiah } from "@/server/config/format";
-import { Divider, IconButton, Tooltip } from "@mui/material";
+import { CircularProgress, Divider, IconButton, Tooltip } from "@mui/material";
 import { useAppState } from "@/context/AppStateContext";
 import ModalQrCodePresent from "./ModalQrCodePresent";
 import { useEventsState } from "@/context/EventsContext";
@@ -35,12 +35,15 @@ import { useAdminState } from "@/context/AdminContext";
 import { toast } from "react-toastify";
 import ModalSeePosters from "./ModalSeePosters";
 import { exportEventToPdf } from "@/server/config/exportTo";
+import ModalSetStatus from "./ModalSetStatus";
+import { getEventParticipantsAndVolunteers } from "@/api/src/peserta";
 
 export default function EventPoster() {
   const { updateAppState } = useAppState();
   const { updateEventsState } = useEventsState();
   const { currentAdmin } = useAdminState();
   const { currEvent } = useEventsState();
+  const [loading, setLoading] = React.useState(false);
   const status = currEvent && currEvent.status;
   const styleForBadge = { backgroundColor: bgColorForStatus[status] };
   const actions = [
@@ -72,12 +75,24 @@ export default function EventPoster() {
         }),
     },
     {
-      id: "export_to_excel",
-      title: "Export ke Excel",
-      icon: XlsxIcon,
-      color: "text-green-500",
-      onClick: () => {
-        exportEventToPdf(currEvent);
+      id: "export_to_pdf",
+      title: "Export ke PDF",
+      icon: PdfIcon,
+      color: "text-red-600",
+      onClick: async () => {
+        setLoading(true);
+        try {
+          const res = await getEventParticipantsAndVolunteers(currEvent.id);
+          const resData = res.data;
+          exportEventToPdf(resData.acara, resData.peserta, resData.volunteers);
+        } catch (error) {
+          console.error(error);
+          toast.error(error?.response?.data?.message || "Terjadi kesalahan", {
+            theme: "colored",
+          });
+        } finally {
+          setLoading(false);
+        }
       },
     },
     {
@@ -97,6 +112,7 @@ export default function EventPoster() {
     await deleteEvent(id);
     updateEventsState.refreshEvents();
   }
+
   async function handlePublish() {
     try {
       await updateEvent(currEvent.id, {
@@ -113,23 +129,26 @@ export default function EventPoster() {
   function handleClickPublish() {
     updateAppState.modal({
       open: true,
-      children: (
-        <ModalConfirmDelete
-          content={
-            <div className="mb-5 dark:text-white">
-              <PublishIcon className="w-11 h-11 mb-3.5 mx-auto" />
-              <h4 className="mb-2 sm:text-lg text-base font-semibold">
-                Anda yakin ingin mempublish acara ini?
-              </h4>
-              <p className="sm:text-sm text-xs">
-                Setelah dipublish, acara tidak dapat diubah lagi
-              </p>
-            </div>
-          }
-          btnLabel="Publish"
-          onClickConfirm={handlePublish}
-        />
-      ),
+      children:
+        currentAdmin && currentAdmin.isAdmin ? (
+          <ModalSetStatus />
+        ) : (
+          <ModalConfirmDelete
+            content={
+              <div className="mb-5 dark:text-white">
+                <PublishIcon className="w-11 h-11 mb-3.5 mx-auto" />
+                <h4 className="mb-2 sm:text-lg text-base font-semibold">
+                  Anda yakin ingin mempublish acara ini?
+                </h4>
+                <p className="sm:text-sm text-xs">
+                  Setelah dipublish, acara tidak dapat diubah lagi
+                </p>
+              </div>
+            }
+            btnLabel="Publish"
+            onClickConfirm={handlePublish}
+          />
+        ),
     });
   }
   function handleClickPoster() {
@@ -167,9 +186,14 @@ export default function EventPoster() {
               <Tooltip key={i} title={item.title} placement="top">
                 <IconButton
                   className="dark:bg-gray-500"
+                  disabled={loading}
                   onClick={() => item.onClick()}
                 >
-                  <item.icon className={`w-6 h-6 font-bold ${item.color}`} />
+                  {loading && item.id === "export_to_pdf" ? (
+                    <CircularProgress color="primary" size={20} />
+                  ) : (
+                    <item.icon className={`w-6 h-6 font-bold ${item.color}`} />
+                  )}
                 </IconButton>
               </Tooltip>
             ))}
@@ -291,7 +315,7 @@ export default function EventPoster() {
             onClick={handleClickPublish}
             className="text-sm sm:text-base flex text-white bg-teal-700 border-0 py-2 px-6 focus:outline-none hover:bg-teal-600 rounded"
           >
-            Publish Acara
+            {currentAdmin.isAdmin ? "Ubah Status Acara" : "Publish Acara"}
           </button>
         )}
       </div>

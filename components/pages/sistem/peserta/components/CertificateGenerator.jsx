@@ -11,6 +11,7 @@ import { uploadImages } from "@/api/src/dashboard";
 // import { getImage } from "@/constants";
 import { useAppState } from "@/context/AppStateContext";
 import { getImgCert } from "@/constants";
+import { truncateName } from "@/server/config/format";
 
 const EX_NAME = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345678901112131415";
 const CANVAS_WIDTH = 800; // Ukuran canvas tetap (logis)
@@ -225,7 +226,7 @@ function CertificateGenerator({
       name:
         (certTemplate?.maxCharacters &&
           participantName &&
-          participantName.slice(0, certTemplate?.maxCharacters)) ||
+          truncateName(participantName, certTemplate.maxCharacters)) ||
         EX_NAME.slice(0, MAX_CHARACTERS),
       position: certTemplate?.position || POSITION,
       fontSize: certTemplate?.fontSize || FONTSIZE,

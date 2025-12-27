@@ -99,40 +99,36 @@ export default function AdminParticipants() {
       }));
       const formatTotalPeserta = {
         name: "Peserta",
-        count: res.data.peserta.filter(
-          (item) => item.status !== "candidate"
-        ).length,
-      }
+        count: res.data.peserta.filter((item) => item.status !== "candidate")
+          .length,
+      };
       const formatTotalPesertaHadir = {
         name: "Peserta Hadir",
         count: res.data.peserta.filter(
           (item) => item.status !== "candidate" && item.is_present
         ).length,
-      }
+      };
       const formatTotalPesertaTidakHadir = {
         name: "Peserta Tidak Hadir",
         count: res.data.peserta.filter(
           (item) => item.status !== "candidate" && !item.is_present
         ).length,
-      }
+      };
       const formatTotalCalonPeserta = {
         name: "Calon Peserta",
-        count: res.data.peserta.filter(
-          (item) => item.status === "candidate"
-        ).length,
-      }
+        count: res.data.peserta.filter((item) => item.status === "candidate")
+          .length,
+      };
       const formatTotalVolunteer = {
         name: "Volunteer",
-        count: res.data.volunteers.filter(
-          (item) => item.status !== "candidate"
-        ).length,
-      }
+        count: res.data.volunteers.filter((item) => item.status !== "candidate")
+          .length,
+      };
       const formatTotalCalonVolunteer = {
         name: "Calon Volunteer",
-        count: res.data.volunteers.filter(
-          (item) => item.status === "candidate"
-        ).length,
-      }
+        count: res.data.volunteers.filter((item) => item.status === "candidate")
+          .length,
+      };
       updateState({
         peserta: resPeserta.filter((item) => item.status !== "candidate"),
         volunteers: resVolunterrs.filter((item) => item.status !== "candidate"),
@@ -142,7 +138,14 @@ export default function AdminParticipants() {
         candidateVolunteers: resVolunterrs.filter(
           (item) => item.status === "candidate"
         ),
-        totalData: [formatTotalPeserta, formatTotalPesertaHadir, formatTotalPesertaTidakHadir, formatTotalCalonPeserta, formatTotalVolunteer, formatTotalCalonVolunteer],
+        totalData: [
+          formatTotalPeserta,
+          formatTotalPesertaHadir,
+          formatTotalPesertaTidakHadir,
+          formatTotalCalonPeserta,
+          formatTotalVolunteer,
+          formatTotalCalonVolunteer,
+        ],
       });
     } catch (error) {
       console.error(error);
@@ -200,7 +203,11 @@ export default function AdminParticipants() {
         <ModalConfirmDelete
           onClickConfirm={async () => {
             try {
-              await deleteParticipantOrVolunteer({ id, type });
+              await deleteParticipantOrVolunteer({
+                id,
+                type,
+                eventId: currEvent.id,
+              });
               await handleSelectSuggestion({
                 id: currEvent.id,
                 event: currEvent,
@@ -267,9 +274,14 @@ export default function AdminParticipants() {
             </table>
             <div className="flex gap-5">
               {totalData.map((item, index) => (
-                <div key={index} className="w-full flex flex-col items-center justify-center p-5 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div
+                  key={index}
+                  className="w-full flex flex-col items-center justify-center p-5 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                >
                   <dt className="mb-2 text-3xl font-extrabold">{item.count}</dt>
-                  <dd className="text-gray-500 dark:text-gray-400">{item.name}</dd>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {item.name}
+                  </dd>
                 </div>
               ))}
             </div>

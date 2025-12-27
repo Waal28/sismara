@@ -23,7 +23,7 @@ export default function ModalPhoto({ images }) {
   const [selectedImg, setSelectedImg] = React.useState(images[0]);
 
   return (
-    <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl lg:w-[90%] md:w-[60%] w-[70%] max-h-screen overflow-auto">
+    <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl lg:w-[90%] md:w-[60%] w-[93%] max-h-screen overflow-auto">
       <React.Fragment>
         <div className="relative w-full mx-auto mb-10">
           <IconButton

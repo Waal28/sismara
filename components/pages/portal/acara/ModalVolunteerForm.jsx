@@ -67,13 +67,22 @@ export default function ModalVolunteerForm({ event, fetchMyEvents }) {
                 required
                 rows="2"
               />
-              <div className="flex justify-end">
+
+              <div className="flex justify-between items-center mt-6">
+                <span className="w-fit h-fit bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-300">
+                  volunteer tersisa : {event.totalVolunteers || 0}/
+                  {event.max_volunteers}
+                </span>
                 <button
-                  disabled={loading}
-                  className="w-fit mt-6 text-center py-3 px-6 bg-teal-800 text-white rounded-lg sm:text-sm text-xs font-semibold hover:bg-teal-900"
+                  disabled={
+                    loading || event.totalVolunteers >= event.max_volunteers
+                  }
+                  className="w-fit text-center py-3 px-6 bg-teal-800 text-white rounded-lg sm:text-sm text-xs font-semibold hover:bg-teal-900"
                 >
                   {loading ? (
                     <CircularProgress color="inherit" size={12} />
+                  ) : event.totalVolunteers >= event.max_volunteers ? (
+                    "Volunteer Sudah Penuh"
                   ) : (
                     "Kirim"
                   )}

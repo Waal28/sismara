@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import PropTypes from 'prop-types';
+import React, { useState, useCallback, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useAppState } from "@/context/AppStateContext";
 import { toast } from "react-toastify";
 import { general, getImage } from "@/constants";
@@ -13,7 +13,7 @@ import { uploadImages } from "@/api/src/dashboard";
 import { useEventsState } from "@/context/EventsContext";
 
 const defaultTime = dayjs(new Date());
-const initData = {
+const getInitState = () => ({
   title: "",
   desc: "",
   prodi: general.prodi[0].name,
@@ -51,36 +51,42 @@ const initData = {
   is_certificate: false,
   is_paid: false,
   is_online: false,
-}
+});
 export default function ModalAddOrEditEvent({ isEdit = false }) {
   const { updateAppState } = useAppState();
   const { updateEventsState, currEvent } = useEventsState();
   const [isLoading, setIsLoading] = useState(false);
-  const editedData = isEdit && {
-    ...currEvent,
-    schedule: {
-      start_time: dayjs(currEvent.schedule.start_time),
-      end_time: dayjs(currEvent.schedule.end_time),
-    },
-    rundown: currEvent.rundown.map((item) => ({
-      ...item,
-      time: {
-        start: dayjs(item.time.start),
-        end: dayjs(item.time.end),
+  const [images, setImages] = useState([]);
+  const [formState, setFormState] = useState(getInitState);
+
+  function getEditedData() {
+    if (!isEdit) return;
+    const editedData = {
+      ...currEvent,
+      schedule: {
+        start_time: dayjs(currEvent.schedule.start_time),
+        end_time: dayjs(currEvent.schedule.end_time),
       },
-    })),
-  };
-  const editedDataPosters = isEdit && currEvent.posters.map((item) => getImage(item))
-
-  const [images, setImages] = useState(isEdit ? editedDataPosters : initData.posters);
-  const [formState, setFormState] = useState(isEdit ? editedData : initData);
-
+      rundown: currEvent.rundown.map((item) => ({
+        ...item,
+        time: {
+          start: dayjs(item.time.start),
+          end: dayjs(item.time.end),
+        },
+      })),
+    };
+    const editedDataPosters = currEvent.posters.map((item) => getImage(item));
+    setFormState(editedData);
+    setImages(editedDataPosters);
+  }
   // Generalized Change Handler (for all input fields)
   const handleChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
+    const newValue =
+      type === "checkbox" ? checked : type === "number" ? Number(value) : value;
     setFormState((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
   }, []);
 
@@ -248,7 +254,6 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
     setIsLoading(true);
 
     const errors = validateForm(); // Panggil validasi
-    console.log(errors);
     if (Object.keys(errors).length > 0) {
       // Jika ada error, tampilkan dengan toast
       Object.entries(errors).forEach(([, value]) => {
@@ -272,8 +277,12 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
     }));
     try {
       // Jika ada gambar, unggah secara paralel
-      const postersFiles = formState.posters.filter((image) => image instanceof File);
-      const oldPosters = formState.posters.filter((image) => typeof image === "string");
+      const postersFiles = formState.posters.filter(
+        (image) => image instanceof File
+      );
+      const oldPosters = formState.posters.filter(
+        (image) => typeof image === "string"
+      );
       if (postersFiles.length > 0) {
         const posterUploadPromises = postersFiles.map((image) => {
           const formData = new FormData();
@@ -285,7 +294,7 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
         const posterUrls = posterResponses.map(
           (response) => response.data.fileName
         );
-        
+
         posters = posterUrls;
       }
       const newFormState = {
@@ -294,7 +303,9 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
         rundown,
         posters: [...posters, ...oldPosters],
       };
-      const apiCall = isEdit ? updateEvent(currEvent.id, newFormState) : addEvent(newFormState);
+      const apiCall = isEdit
+        ? updateEvent(currEvent.id, newFormState)
+        : addEvent(newFormState);
       await apiCall;
       toast.success("Data berhasil disimpan", { theme: "colored" });
       updateEventsState.refreshEvents();
@@ -308,6 +319,14 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    getEditedData();
+    return () => {
+      setFormState(getInitState());
+      setImages([]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <main className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl lg:w-[50%] md:w-[60%] sm:w-[80%] w-[90%] max-h-screen overflow-auto">
       <div className="w-full mx-auto flex items-center justify-center">
@@ -453,7 +472,7 @@ export default function ModalAddOrEditEvent({ isEdit = false }) {
 }
 ModalAddOrEditEvent.propTypes = {
   isEdit: PropTypes.bool,
-}
+};
 
 function renderInput({ label, name, value, onChange, type = "text" }) {
   return (

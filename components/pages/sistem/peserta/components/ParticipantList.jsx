@@ -4,6 +4,7 @@ import { Upload } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import React from "react";
 import { useAdminState } from "@/context/AdminContext";
+import { useEventsState } from "@/context/EventsContext";
 
 const columns = [
   { field: "name", headerName: "Nama Peserta" },
@@ -19,6 +20,7 @@ export default function ParticipantList({
   handleClickUpload,
 }) {
   const { currentAdmin } = useAdminState();
+  const { currEvent } = useEventsState();
   const [cols, setCols] = React.useState(columns);
 
   React.useEffect(() => {
@@ -29,13 +31,18 @@ export default function ParticipantList({
       ];
       setCols(newCols);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5 gap-3">
-        <h1 className="text-lg sm:text-xl font-bold">Daftar Peserta</h1>
+        <h1 className="text-lg sm:text-xl font-bold">
+          Daftar Peserta{" "}
+          <span className="bg-teal-600 text-white py-1 px-2 rounded-lg text-sm sm:text-base">
+            {peserta.length}/{currEvent.max_participants}
+          </span>
+        </h1>
         {isCertificate && (
           <Tooltip title="Upload Sertifikat Peserta" placement="top">
             <IconButton

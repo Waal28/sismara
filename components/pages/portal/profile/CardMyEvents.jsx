@@ -8,7 +8,9 @@ import Link from "next/link";
 import { useAppState } from "@/context/AppStateContext";
 import { toast } from "react-toastify";
 import CertificateGenerator from "../../sistem/peserta/components/CertificateGenerator";
+import { useRouter } from "next/navigation";
 export default function CardMyEvents() {
+  const router = useRouter();
   const { updateAppState, currentUser } = useAppState();
   const [loading, setLoading] = React.useState(true);
   const [userParticipants, setUserParticipants] = React.useState([]);
@@ -27,6 +29,10 @@ export default function CardMyEvents() {
       setLoading(false);
     }
   }
+  function handleClickAdd() {
+    updateAppState.modal({ open: false });
+    router.push("/events");
+  }
   React.useEffect(() => {
     fetchMyEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,7 +42,10 @@ export default function CardMyEvents() {
       <div className="flex items-center gap-2 border-b-2 lg:text-lg md:text-lg text-base font-medium bg-gray-200 rounded-t-xl text-gray-900 border-gray-300 dark:bg-gray-800 dark:border-white/10 dark:text-white px-8 py-4">
         Acara yang diikuti
         <Tooltip title="Tambah Acara">
-          <IconButton className="text-lg text-gray-600 dark:text-white">
+          <IconButton
+            className="text-lg text-gray-600 dark:text-white"
+            onClick={handleClickAdd}
+          >
             <AddIcon />
           </IconButton>
         </Tooltip>
@@ -56,18 +65,17 @@ export default function CardMyEvents() {
           <div className="w-full h-80 flex flex-col justify-center items-center">
             <Loader2 />
           </div>
+        ) : userParticipants.length > 0 ? (
+          <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 overflow-auto max-h-96">
+            {userParticipants.map((card) => (
+              <CardItem
+                key={card.id}
+                card={card}
+                updateAppState={updateAppState}
+              />
+            ))}
+          </div>
         ) : (
-          userParticipants.length > 0 ?
-            <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 overflow-auto max-h-96">
-              {userParticipants.map((card) => (
-                <CardItem
-                  key={card.id}
-                  card={card}
-                  updateAppState={updateAppState}
-                />
-              ))}
-            </div>
-          :
           <div className="w-full h-80 flex flex-col justify-center items-center">
             <h1 className="text-2xl font-semibold text-gray-600 dark:text-white">
               Belum ada acara

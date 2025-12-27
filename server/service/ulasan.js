@@ -19,7 +19,8 @@ export default class UlasanService {
           },
           mahasiswa: {
             name: mahasiswa.name,
-            image: mahasiswa.image || mahasiswa.defaultImg,
+            image: mahasiswa.image,
+            defaultImg: mahasiswa.defaultImg,
             prodi: mahasiswa.prodi,
           },
         };
@@ -180,7 +181,7 @@ export default class UlasanService {
           eventTitle: item.title,
           eventProdi: item.prodi,
           thumbnail: ulasan[0]?.images[0],
-          images: ulasan.map((ulasan) => ulasan.images).flat(),
+          images: ulasan.map((ul) => ul.images).flat(),
         };
       })
     );

@@ -37,6 +37,7 @@ export default function PotentialList({
       await acceptOrRejectCandidate(candidate.$fullData.id, {
         isApproved,
         type: candidateFor.toLowerCase(),
+        eventId: currEvent.id,
       });
       await fetchEvent({ id: currEvent.id, event: currEvent });
     } catch (error) {

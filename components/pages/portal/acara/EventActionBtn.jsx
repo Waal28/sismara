@@ -51,6 +51,7 @@ export default function EventActionBtn() {
   }
   // Fetch acara yang diikuti oleh user
   const fetchMyEvents = useCallback(async () => {
+    if (!currentUser) return;
     updateState("loading", true);
     try {
       const res = await getMyEvents(currentUser.id);
@@ -128,6 +129,10 @@ export default function EventActionBtn() {
 
   // Event Handler untuk mengikuti acara
   const handleClickFollow = async () => {
+    if (currEvent.totalParticipants >= currEvent.max_participants) {
+      toast.warning("Mohon maaf, acara sudah penuh", { theme: "colored" });
+      return;
+    }
     if (currEvent.is_paid) {
       updateAppState.modal({
         open: true,
@@ -220,7 +225,7 @@ export default function EventActionBtn() {
     } else {
       updateState("btnConfig1", btnUserIsNotLogin);
     }
-  }, [currentUser, currEvent, fetchMyEvents]);
+  }, [currentUser, currEvent]);
 
   return (
     currEvent &&

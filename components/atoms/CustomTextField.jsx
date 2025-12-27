@@ -1,9 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TextField } from '@mui/material';
-import { useDarkMode } from '@/context/DarkModeContext';
+import React from "react";
+import PropTypes from "prop-types";
+import { TextField } from "@mui/material";
+import { useDarkMode } from "@/context/DarkModeContext";
 
-export default function CustomTextField({ select, label, name, value, onChange, size, fullWidth, children, id }) {
+export default function CustomTextField({
+  select = false,
+  label = "",
+  name = "",
+  value = "",
+  onChange = () => {},
+  size = "small",
+  fullWidth = false,
+  children = null,
+  id = "",
+}) {
   const { darkMode } = useDarkMode();
   const isDarkMode = darkMode && true;
 
@@ -19,27 +29,27 @@ export default function CustomTextField({ select, label, name, value, onChange, 
       fullWidth={fullWidth}
       InputProps={{
         style: {
-          color: isDarkMode ? 'white' : 'black', // Warna teks (value) input
+          color: isDarkMode ? "white" : "black", // Warna teks (value) input
         },
       }}
       InputLabelProps={{
         style: {
-          color: isDarkMode ? 'lightgray' : 'darkgray', // Warna label
+          color: isDarkMode ? "lightgray" : "darkgray", // Warna label
         },
       }}
       sx={{
-        '& .MuiOutlinedInput-root': {
-          '& fieldset': {
-            borderColor: isDarkMode ? 'gray' : 'lightgray', // Warna border default
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: isDarkMode ? "gray" : "lightgray", // Warna border default
           },
-          '&:hover fieldset': {
-            borderColor: isDarkMode ? 'lightgray' : 'gray', // Warna border saat hover
+          "&:hover fieldset": {
+            borderColor: isDarkMode ? "lightgray" : "gray", // Warna border saat hover
           },
-          '&.Mui-focused fieldset': {
-            borderColor: isDarkMode ? 'white' : 'darkgray', // Warna border saat fokus
+          "&.Mui-focused fieldset": {
+            borderColor: isDarkMode ? "white" : "darkgray", // Warna border saat fokus
           },
-          '& .MuiSvgIcon-root': {
-            color: isDarkMode ? 'white' : 'black', // Warna ikon (misalnya ikon select)
+          "& .MuiSvgIcon-root": {
+            color: isDarkMode ? "white" : "black", // Warna ikon (misalnya ikon select)
           },
         },
       }}
@@ -57,20 +67,6 @@ CustomTextField.propTypes = {
   onChange: PropTypes.func,
   size: PropTypes.string,
   fullWidth: PropTypes.bool,
-  options: PropTypes.array,
   children: PropTypes.node,
   id: PropTypes.string,
-};
-
-CustomTextField.defaultProps = {
-  select: false,
-  label: '',
-  name: '',
-  value: '',
-  onChange: () => {},
-  size: 'small',
-  fullWidth: false,
-  options: [],
-  children: null,
-  id: '',
 };

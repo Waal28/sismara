@@ -1,6 +1,7 @@
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { formatDateTime, formatRupiah } from "./format";
 
 // const data = [
 //   { name: 'John', age: 30, job: 'Developer' },
@@ -14,81 +15,162 @@ export function ExportToXLSX(data, fileName) {
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
 }
 
-export const exportEventToPdf = (data) => {
+export const exportEventToPdf = (acara, peserta = [], volunteer = []) => {
   const doc = new jsPDF();
-  const title = "Laporan Acara";
 
-  // Set font ke Times New Roman dan buat judul menjadi bold
+  // Judul
+  const title = "Detail Acara";
   doc.setFont("times", "bold");
   doc.setFontSize(18);
+  const titleWidth = doc.getTextWidth(title);
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const xTitle = (pageWidth - titleWidth) / 2;
+  doc.text(title, xTitle, 10);
 
-  // Menghitung posisi horizontal untuk memusatkan teks
-  const titleWidth = doc.getTextWidth(title); // Mendapatkan lebar teks
-  const pageWidth = doc.internal.pageSize.getWidth(); // Mendapatkan lebar halaman
-  const xPosition = (pageWidth - titleWidth) / 2; // Menghitung posisi X untuk memusatkan
+  // Nama Acara
+  doc.setFontSize(16);
+  const eventTitleWidth = doc.getTextWidth(acara.title);
+  const xEventTitle = (pageWidth - eventTitleWidth) / 2;
+  doc.text(acara.title, xEventTitle, 20);
 
-  // Posisi vertikal
-  const yPosition = 10; // Anda bisa sesuaikan posisi vertikal sesuai kebutuhan
-
-  // Menambahkan teks judul di tengah
-  doc.text(title, xPosition, yPosition);
-  // Set font ke Times New Roman dan buat judul menjadi bold
-  doc.setFont("times", "bold");
-  doc.setFontSize(18);
-
-  // Menghitung posisi horizontal untuk memusatkan teks
-  const titleWidth1 = doc.getTextWidth(data.title); // Mendapatkan lebar teks
-  const pageWidth1 = doc.internal.pageSize.getWidth(); // Mendapatkan lebar halaman
-  const xPosition1 = (pageWidth1 - titleWidth1) / 2; // Menghitung posisi X untuk memusatkan
-  // Posisi vertikal
-  const yPosition1 = 20; // Anda bisa sesuaikan posisi vertikal sesuai kebutuhan
-  doc.text(data.title, xPosition1, yPosition1);
-
-  // Set font size untuk teks biasa
+  // Informasi Umum
   doc.setFontSize(12);
   doc.setFont("times", "normal");
+  doc.text(`Program Studi: ${acara.prodi}`, 10, 40);
+  doc.text(
+    `Lokasi: ${acara.is_online ? "Online" : acara.location.address}`,
+    10,
+    50
+  );
+  if (!acara.is_online) {
+    doc.text(`Google Maps: ${acara.location.link_gmaps}`, 10, 60);
+  }
+  doc.text(`Deskripsi: ${acara.desc}`, 10, 70);
+  doc.text(
+    `Waktu Acara: ${formatDateTime(
+      new Date(acara.schedule.start_time)
+    )} - ${formatDateTime(new Date(acara.schedule.end_time))}`,
+    10,
+    80
+  );
 
-  // Tambahkan informasi umum
-  doc.setFont("times", "normal");
-  doc.text(`Lokasi: ${data.location.address}`, 10, 40);
-  doc.text(`Link Acara: ${data.event_link}`, 10, 50);
-  doc.text(`Deskripsi: ${data.desc}`, 10, 60);
-
-  // Tambahkan rundown ke dalam tabel
-  const rundownHeaders = ["Sesi", "Pembicara", "Waktu Mulai", "Waktu Selesai"];
-  const rundownRows = data.rundown.map((item) => [
+  // Rundown dalam tabel
+  const rundownHeaders = ["Sesi", "Pembicara", "Mulai", "Selesai"];
+  const rundownRows = acara.rundown.map((item) => [
     item.session,
     item.speaker,
-    new Date(item.time.start).toLocaleString(),
-    new Date(item.time.end).toLocaleString(),
+    formatDateTime(new Date(item.time.start)),
+    formatDateTime(new Date(item.time.end)),
   ]);
 
   autoTable(doc, {
     head: [rundownHeaders],
     body: rundownRows,
-    startY: 70,
+    startY: 90,
     theme: "grid",
     headStyles: {
       fillColor: [22, 160, 133],
       textColor: [255, 255, 255],
       font: "times",
       fontStyle: "bold",
-    }, // Bold header
+    },
     bodyStyles: { font: "times", fontSize: 10 },
   });
 
-  // Tambahkan informasi tambahan (Bold pada harga dan status pembayaran)
-  doc.text("Informasi Tambahan:", 10, doc.lastAutoTable.finalY + 10);
+  // Informasi Tambahan
+  let yPos = doc.lastAutoTable.finalY + 10;
+  doc.setFont("times", "bold");
+  doc.text("Informasi Tambahan:", 10, yPos);
 
   doc.setFont("times", "normal");
-  doc.text(`- Biaya:`, 10, doc.lastAutoTable.finalY + 20);
-  doc.setFont("times", "bold");
-  doc.text(`${data.payment_price}`, 60, doc.lastAutoTable.finalY + 20); // Dibold
+  doc.text(
+    `Biaya: ${
+      acara.is_paid ? `${formatRupiah(acara.payment_price)}` : "Gratis"
+    }`,
+    10,
+    yPos + 10
+  );
+  if (acara.is_paid) {
+    doc.text("Informasi Pembayaran:", 10, yPos + 20);
+    doc.setFont("times", "bold");
+    doc.text(acara.payment_desc, 20, yPos + 30);
+    doc.setFont("times", "normal");
+  }
 
-  doc.setFont("times", "normal");
-  doc.text(`- Status Acara:`, 10, doc.lastAutoTable.finalY + 30);
-  doc.setFont("times", "bold");
-  doc.text(`${data.status}`, 60, doc.lastAutoTable.finalY + 30); // Dibold
+  doc.text(`Status Acara: ${acara.status}`, 10, yPos + 50);
+  doc.text(
+    `Sertifikat: ${acara.is_certificate ? "Tersedia" : "Tidak Ada"}`,
+    10,
+    yPos + 60
+  );
+
+  // Tambah Max Participants
+  doc.text(`Maksimum Peserta: ${acara.max_participants}`, 10, yPos + 70);
+
+  // Informasi Volunteer
+  if (acara.is_volunteers) {
+    doc.text(`Maksimum Volunteer: ${acara.max_volunteers}`, 10, yPos + 80);
+    doc.text(`Kriteria Volunteer: ${acara.criteria_volunteers}`, 10, yPos + 90);
+  }
+
+  // Data Peserta
+  if (peserta.length > 0) {
+    doc.setFont("times", "bold");
+    doc.text("Daftar Peserta:", 10, yPos + 110);
+    doc.setFont("times", "normal");
+
+    const pesertaHeaders = ["Nama", "NPM", "Email", "Prodi", "Kehadiran"];
+    const pesertaRows = peserta.map((item) => [
+      item.mahasiswa.name,
+      item.mahasiswa.npm,
+      item.mahasiswa.email,
+      item.mahasiswa.prodi,
+      item.isPresent ? "Hadir" : "Tidak Hadir",
+    ]);
+
+    autoTable(doc, {
+      head: [pesertaHeaders],
+      body: pesertaRows,
+      startY: yPos + 120,
+      theme: "grid",
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: [255, 255, 255],
+        font: "times",
+        fontStyle: "bold",
+      },
+      bodyStyles: { font: "times", fontSize: 10 },
+    });
+  }
+
+  // Data Volunteer
+  if (volunteer.length > 0) {
+    doc.setFont("times", "bold");
+    doc.text("Daftar Volunteer:", 10, doc.lastAutoTable.finalY + 10);
+    doc.setFont("times", "normal");
+
+    const volunteerHeaders = ["Nama", "NPM", "Email", "Prodi"];
+    const volunteerRows = volunteer.map((item) => [
+      item.mahasiswa.name,
+      item.mahasiswa.npm,
+      item.mahasiswa.email,
+      item.mahasiswa.prodi,
+    ]);
+
+    autoTable(doc, {
+      head: [volunteerHeaders],
+      body: volunteerRows,
+      startY: doc.lastAutoTable.finalY + 20,
+      theme: "grid",
+      headStyles: {
+        fillColor: [231, 76, 60],
+        textColor: [255, 255, 255],
+        font: "times",
+        fontStyle: "bold",
+      },
+      bodyStyles: { font: "times", fontSize: 10 },
+    });
+  }
 
   // Simpan PDF
   doc.save("laporan-acara.pdf");

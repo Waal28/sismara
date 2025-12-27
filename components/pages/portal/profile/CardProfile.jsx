@@ -76,11 +76,10 @@ export default function CardProfile() {
         ) : (
           <label
             htmlFor="profilePic"
-            className="block photo-wrapper mx-auto p-2 w-full transform hover:scale-105 duration-300 cursor-pointer"
+            className="block overflow-hidden mx-auto p-2 w-full transform hover:scale-105 duration-300 cursor-pointer rounded-full border-2 border-teal-500"
             style={{ width: "128px", height: "128px" }}
           >
             <Image
-              className="rounded-full border-2 border-teal-500 object-fill w-full h-full"
               src={(image && getImage(image)) || defaultImg || DEFAULT_USER_IMG}
               alt={name || "..."}
               width={128}

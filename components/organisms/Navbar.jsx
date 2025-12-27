@@ -11,14 +11,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
-import {
-  Avatar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Tooltip,
-} from "@mui/material";
+import { IconButton, Menu, MenuItem, Stack, Tooltip } from "@mui/material";
 import SwitchDarkMode from "../atoms/SwitchDarkMode";
 import { DEFAULT_USER_IMG, general, getImage } from "@/constants";
 import { useAppState } from "@/context/AppStateContext";
@@ -223,15 +216,19 @@ export default function Navbar({ pages, settings, children }) {
                     </Box>
                     <Tooltip title="Menu Pengguna">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src={
-                            (currentUser?.image &&
-                              getImage(currentUser?.image)) ||
-                            currentUser?.defaultImg ||
-                            DEFAULT_USER_IMG
-                          }
-                        />
+                        <div className="overflow-hidden w-10 h-10 rounded-full">
+                          <Image
+                            src={
+                              (currentUser?.image &&
+                                getImage(currentUser?.image)) ||
+                              currentUser?.defaultImg ||
+                              DEFAULT_USER_IMG
+                            }
+                            alt="..."
+                            width={40}
+                            height={40}
+                          />
+                        </div>
                       </IconButton>
                     </Tooltip>
                   </>

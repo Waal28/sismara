@@ -6,19 +6,19 @@ import PropTypes from "prop-types";
 import { Loader2 } from "@/components/atoms/CustomLoader";
 import { getAllReviews } from "@/api/src/ulasan";
 import { toast } from "react-toastify";
-import { DEFAULT_USER_IMG, getImage } from "@/constants";
+import { getImage } from "@/constants";
 import { FullStarIcon } from "@/components/atoms/CustomIcon";
 
-function Card({ title, eventId, name, text, img, prodi, rating }) {
+function Card({ title, eventId, name, text, img, defaultImg, prodi, rating }) {
   return (
     <div className="w-full mx-auto rounded-lg bg-white dark:bg-teal-700 p-5 text-gray-800 font-light shadow-xl">
       <h5 className="text-center mb-2 font-medium text-teal-700 dark:text-gray-300 hover:underline dark:hover:text-white line-clamp-2 ">
         <Link href={`events/${eventId}`}>{title}</Link>
       </h5>
       <div className="w-full flex mb-4 items-center">
-        <div className="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
+        <div className="overflow-hidden w-10 h-10 rounded-full border border-gray-200">
           <Image
-            src={img ? getImage(img) : DEFAULT_USER_IMG}
+            src={img ? getImage(img) : defaultImg}
             alt="..."
             width={40}
             height={40}
@@ -45,10 +45,7 @@ function Card({ title, eventId, name, text, img, prodi, rating }) {
       </div>
       <div className="flex p-1 gap-1 text-orange-300">
         {[...Array(rating)].map((_, index) => (
-          <FullStarIcon
-            key={index}
-            className="text-yellow-500 w-4 h-4"
-          />
+          <FullStarIcon key={index} className="text-yellow-500 w-4 h-4" />
         ))}
       </div>
     </div>
@@ -62,6 +59,7 @@ Card.propTypes = {
   prodi: PropTypes.string,
   eventId: PropTypes.string,
   rating: PropTypes.number,
+  defaultImg: PropTypes.string,
 };
 export default function FeedBack() {
   const [feedBack, setFeedBacks] = React.useState([]);
@@ -78,6 +76,7 @@ export default function FeedBack() {
           name: item?.mahasiswa?.name || "-",
           text: item?.content || "-",
           img: item?.mahasiswa?.image,
+          defaultImg: item?.mahasiswa?.defaultImg,
           rating: item?.rating,
         }));
         setFeedBacks(data);
